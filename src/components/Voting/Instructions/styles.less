@@ -1,0 +1,20 @@
+@import './../../../styles/responsive.less';
+@import './../../../styles/definitions.less';
+
+h1 {
+    border-radius: @gutter;
+    border: 2px solid lighten(@brand-primary, 40%);
+    background-color: lighten(@brand-primary, 42%);
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: lighten(@charcoal, 33%);
+    margin: @gutter*2 auto;
+    padding: @gutter*1.66 0;
+    .tac();
+    span {
+        margin-top: @gutter;
+        font-size: 2.33rem;
+        display: block;
+        color: @brand-primary;
+    }
+}

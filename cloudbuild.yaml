@@ -1,0 +1,14 @@
+steps:
+- name: node:alpine
+  entrypoint: yarn
+  args: ['install', '--ignore-scripts', '--no-lockfile', '--non-interactive']
+- name: node:alpine
+  entrypoint: yarn
+  args: ['gatsby', 'build']
+#  env:
+#  - 'SENTRY_ENVIRONMENT=${_ENV}'
+#  - 'SENTRY_RELEASE=$COMMIT_SHA'
+  dir: 'admin'
+- name: gcr.io/cloud-builders/gsutil
+  args: ['-m', 'rm', '-r', 'gs://${_BUCKET}/*']
+  dir: 'public'
