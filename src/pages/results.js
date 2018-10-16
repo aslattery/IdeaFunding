@@ -15,6 +15,7 @@ import DefaultLayout from './../layouts/unauthenticated';
 import VotingStatCards from './../components/Voting/StatCards';
 import VotingOptions from './../components/Voting/Options';
 import VotingRules from './../components/Voting/Rules';
+import VotingResults from './../components/Voting/Results';
 
 const options = [
     'PITCH1',
@@ -40,18 +41,21 @@ class ResultsPage extends React.Component {
         let totalVotes = 0;
         let uniqueVoters = 0;
         options.map((opt) => {
-            db.collection("votes").where("option", "==", opt).onSnapshot((data) => {
+            db.collection("voters").where("vote", "==", opt).onSnapshot((data) => {
                 voteCounts[opt] = data.size;
-                totalVotes = totalVotes + data.size;
                 this.setState({
-                    totalVotes,
                     voteCounts,
                 });
             });
         });
         db.collection("voters").onSnapshot((data) => {
             this.setState({
-                uniqueVoters: data.size,
+                uniqueVotes: data.size,
+            });
+        });
+        db.collection("votes").onSnapshot((data) => {
+            this.setState({
+                totalVotes: data.size,
             });
         });
 
@@ -68,6 +72,10 @@ class ResultsPage extends React.Component {
                     <VotingStatCards
                         votes={this.state.totalVotes}
                         uniques={this.state.uniqueVotes}
+                    />
+                    <VotingResults
+                        data={this.state.voteCounts}
+                        totalVotes={this.state.uniqueVotes}
                     />
                 </main>
             </DefaultLayout>
