@@ -1,0 +1,35 @@
+{
+  "name": "ideafunding",
+  "version": "0.0.0",
+  "description": "🗳️ Voting page and results reporting for Startup Tucson's IdeaFunding pitch competition.",
+  "repository": "git@github.com:aslattery/IdeaFunding.git",
+  "author": "Andrew Slattery <foss@awslattery.com>",
+  "private": true,
+  "scripts": {
+    "develop": "gatsby develop",
+    "build": "gatsby build",
+    "serve": "gatsby serve"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/node": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "eslint": "^5.7.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-react": "^7.11.1"
+  },
+  "dependencies": {
+    "firebase": "^5.5.4",
+    "gatsby": "^2.0.23",
+    "gatsby-plugin-catch-links": "^2.0.4",
+    "gatsby-plugin-google-tagmanager": "^2.0.5",
+    "gatsby-plugin-less": "^2.0.5",
+    "gatsby-plugin-react-helmet": "^3.0.0",
+    "less": "^3.8.1",
+    "prop-types": "^15.6.2",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "react-helmet": "^5.2.0"
+  }
+}
