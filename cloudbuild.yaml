@@ -12,5 +12,3 @@ steps:
 - name: gcr.io/cloud-builders/gsutil
   args: ['-m', 'rm', '-r', 'gs://${_BUCKET}/*']
   dir: 'public'
-- name: gcr.io/cloud-builders/gsutil
-  args: ['-m', 'cp', '-r', '*', 'gs://${_BUCKET}/public/']
