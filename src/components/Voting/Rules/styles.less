@@ -1,0 +1,25 @@
+@import './../../../styles/responsive.less';
+@import './../../../styles/definitions.less';
+
+.rules {
+    margin: @gutter;
+    counter-reset: rules-counter;
+    dt::before {
+        display: inline-block;
+        width: 1.5rem;
+        .tac();
+        font-size: 0.9rem;
+        margin-right: @gutter;
+        border-radius: 100%;
+        background-color: lighten(@charcoal, 80%);
+        content: counter(rules-counter);
+	    counter-increment: rules-counter;
+    }
+    dt {
+        font-size: 1rem;
+        font-weight: 300;
+        margin: @gutter auto;
+        line-height: 1.66rem;
+        color: lighten(@charcoal, 33%);
+    }
+}
