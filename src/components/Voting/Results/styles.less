@@ -1,0 +1,35 @@
+@import './../../../styles/responsive.less';
+@import './../../../styles/definitions.less';
+
+.results {
+    .flex-col();
+    margin: @gutter;
+    .result {
+        .flex-row();
+        align-items: center;
+        justify-content: space-between;
+        padding: @gutter*2 0 @gutter 0;
+        position: relative;
+        h4, span {
+            flex-basis: 50%;
+            font-size: 1rem;
+            font-weight: 400;
+            font-family: 'Roboto Mono', monospace;
+        }
+        h4 {
+            margin: 0;
+        }
+        span {
+            .tar();
+        }
+        div {
+            margin: 0;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            height: 0.1rem;
+            font-size: 0;
+            background-color: @brand-primary;
+        }
+    }
+}
