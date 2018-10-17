@@ -4,12 +4,6 @@ import Helmet from 'react-helmet';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 import firebaseConfig from './../../conf.d/firebase.conf';
-!firebase.apps.length && firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const dbOpts = {
-    timestampsInSnapshots: true,
-};
-db.settings(dbOpts);
 
 import DefaultLayout from './../layouts/unauthenticated';
 import VotingStatCards from './../components/Voting/StatCards';
@@ -40,24 +34,32 @@ class ResultsPage extends React.Component {
         let voteCounts = {};
         let totalVotes = 0;
         let uniqueVoters = 0;
-        options.map((opt) => {
-            db.collection("voters").where("vote", "==", opt).onSnapshot((data) => {
-                voteCounts[opt] = data.size;
-                this.setState({
-                    voteCounts,
+        if (typeof window !== `undefined`) {
+            !firebase.apps.length && firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+            const dbOpts = {
+                timestampsInSnapshots: true,
+            };
+            db.settings(dbOpts);
+            options.map((opt) => {
+                db.collection("voters").where("vote", "==", opt).onSnapshot((data) => {
+                    voteCounts[opt] = data.size;
+                    this.setState({
+                        voteCounts,
+                    });
                 });
             });
-        });
-        db.collection("voters").onSnapshot((data) => {
-            this.setState({
-                uniqueVotes: data.size,
+            db.collection("voters").onSnapshot((data) => {
+                this.setState({
+                    uniqueVotes: data.size,
+                });
             });
-        });
-        db.collection("votes").onSnapshot((data) => {
-            this.setState({
-                totalVotes: data.size,
+            db.collection("votes").onSnapshot((data) => {
+                this.setState({
+                    totalVotes: data.size,
+                });
             });
-        });
+        }
 
     }
 
