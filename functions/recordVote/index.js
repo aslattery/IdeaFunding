@@ -30,24 +30,39 @@ exports.recordVote = (req, res) => {
                 });
                 console.log('Instantiate Firestore');
                 const fdb = fba.firestore();
-                // Add/update vote log
-                console.log('Insert voter registration');
-                let votersRef = fdb.collection('voters').doc(params.msisdn).set({
-                    vote: vote,
-                    recorded: Date.now(),
-                }).then(ref => {
-                    console.log('Voter registered: ', params.msisdn.substr(-4));
-                    let votesRef = fdb.collection(`votes`).add({
-                        vote: vote,
-                        castedBy: params.msisdn,
-                        recorded: Date.now(),
-                    }).then(ref => {
-                        console.log('Vote casted: ', ref.id);
-                        res.status(200).send('Vote casted.');
-                    }).catch(err => {
-                        console.error(err);
-                        res.status(500).send(err);
-                    });
+                // Check for live status
+                fdb.collection('pollConfig').doc('20181016').get().then(liveStatus => {
+                    if (!liveStatus.exists) {
+                        console.error('No poll status config\'d');
+                    } else {
+                        const pollConfig = liveStatus.data();
+                        if (pollConfig.live) {
+                            // Add/update vote log
+                            console.log('Insert voter registration');
+                            let votersRef = fdb.collection('voters').doc(params.msisdn).set({
+                                vote: vote,
+                                recorded: Date.now(),
+                            }).then(ref => {
+                                console.log('Voter registered: ', params.msisdn.substr(-4));
+                                let votesRef = fdb.collection(`votes`).add({
+                                    vote: vote,
+                                    castedBy: params.msisdn,
+                                    recorded: Date.now(),
+                                }).then(ref => {
+                                    console.log('Vote casted: ', ref.id);
+                                    res.status(200).send('Vote casted.');
+                                }).catch(err => {
+                                    console.error(err);
+                                    res.status(500).send(err);
+                                });
+                            }).catch(err => {
+                                console.error(err);
+                                res.status(500).send(err);
+                            });
+                        } else {
+                            res.status(200).send('Polls closed');
+                        }
+                    }
                 }).catch(err => {
                     console.error(err);
                     res.status(500).send(err);
