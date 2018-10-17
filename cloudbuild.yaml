@@ -10,5 +10,5 @@ steps:
 #  - 'SENTRY_RELEASE=$COMMIT_SHA'
   dir: 'admin'
 - name: gcr.io/cloud-builders/gsutil
-  args: ['-m', 'rm', '-r', 'gs://${_BUCKET}/*']
+  args: ['-m', 'cp', '-r', '*', 'gs://${_BUCKET}']
   dir: 'public'
