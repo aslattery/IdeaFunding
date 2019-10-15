@@ -1,0 +1,20 @@
+{
+    "plugins": [
+        "@babel/plugin-proposal-export-namespace-from",
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-proposal-optional-chaining"
+    ],
+    "presets": [
+        [
+            "babel-preset-gatsby",
+            {
+                "targets": [
+                    ">0.5%",
+                    "last 2 versions",
+                    "node >= 10",
+                    "not dead"
+                ]
+            }
+        ]
+    ]
+}
