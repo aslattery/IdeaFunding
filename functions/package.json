@@ -1,22 +1,29 @@
 {
-  "name": "functions",
-  "description": "Cloud Functions for Firebase",
-  "scripts": {
-    "serve": "firebase serve --only functions",
-    "shell": "firebase functions:shell",
-    "start": "npm run shell",
-    "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
-  },
-  "engines": {
-    "node": "8"
-  },
-  "dependencies": {
-    "firebase-admin": "^8.0.0",
-    "firebase-functions": "^3.1.0"
-  },
-  "devDependencies": {
-    "firebase-functions-test": "^0.1.6"
-  },
-  "private": true
+    "name": "ideafunding-functions",
+    "version": "1.0.0",
+    "description": "Startup Tucson's IdeaFunding people's choice award, utilizing Cloud Functions for Firebase.",
+    "repository": "git@github.com:aslattery/IdeaFunding.git",
+    "author": "Andrew Slattery <foss@awslattery.com>",
+    "license": "MIT",
+    "scripts": {
+        "serve": "firebase serve --only functions",
+        "shell": "firebase functions:shell",
+        "start": "npm run shell",
+        "deploy": "firebase deploy --only functions",
+        "logs": "firebase functions:log"
+    },
+    "engines": {
+        "node": "8"
+    },
+    "bugs": {
+        "url": "https://github.com/aslattery/IdeaFunding/issues"
+    },
+    "dependencies": {
+        "firebase-admin": "^8.0.0",
+        "firebase-functions": "^3.1.0"
+    },
+    "devDependencies": {
+        "firebase-functions-test": "^0.1.6"
+    },
+    "private": false
 }
