@@ -1,0 +1,11 @@
+{
+    "firestore": {
+        "rules": "firestore.rules",
+        "indexes": "firestore.indexes.json"
+    },
+    "hosting": {
+        "site": "idea-funding-vote",
+        "public": "client/public",
+        "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    }
+}
