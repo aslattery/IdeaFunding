@@ -1,6 +1,6 @@
 {
     "name": "ideafunding-functions",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "Startup Tucson's IdeaFunding people's choice award, utilizing Cloud Functions for Firebase.",
     "repository": "git@github.com:aslattery/IdeaFunding.git",
     "author": "Andrew Slattery <foss@awslattery.com>",
