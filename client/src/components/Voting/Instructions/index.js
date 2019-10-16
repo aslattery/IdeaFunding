@@ -31,6 +31,7 @@ const Heading = styled.h1`
 
 const VotingPhoneNumber = styled.h2`
     color: ${(props) => props.theme.colors.brand.primary};
+    font-family: 'Roboto Mono', monospace;
     font-size: 2.5rem;
     font-weight: 400;
     margin: 0.66rem 0 0 0;
@@ -42,6 +43,17 @@ const VotingPhoneNumber = styled.h2`
 
 class VotingInstuctions extends PureComponent {
     render = () => {
+        const { number } = this.props;
+
+        // Format the number for display
+        let formattedNumber = String(number);
+        formattedNumber = (formattedNumber.length > 10
+            ? formattedNumber.substr(1)
+            : formattedNumber
+        )
+            .replace(/[^\d]/g, '')
+            .replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+
         return (
             <InstructionCard>
                 <Heading>
@@ -49,14 +61,14 @@ class VotingInstuctions extends PureComponent {
                     <br />
                     text your team&apos;s code to:
                 </Heading>
-                <VotingPhoneNumber>(000) 000-0000</VotingPhoneNumber>
+                <VotingPhoneNumber>{formattedNumber}</VotingPhoneNumber>
             </InstructionCard>
         );
     };
 }
 
 VotingInstuctions.propTypes = {
-    number: PropTypes.string
+    number: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 };
 
 export default VotingInstuctions;
