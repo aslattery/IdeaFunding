@@ -25,8 +25,10 @@ const InstructionCard = styled.div`
 `;
 
 const Illustration = styled(({ ...rest }) => <AwardIllustration {...rest} />)`
+    height: 15rem;
     margin: 0 0 1.66rem 0;
     ${(props) => props.theme.responsive.sff} {
+        height: auto;
         margin: 0 0 1.66rem 0;
     }
 `;
@@ -73,7 +75,7 @@ class VotingInstuctions extends PureComponent {
                 <Heading>
                     To vote for your favorite pitch,
                     <br />
-                    text your team&apos;s code to:
+                    text their code to:
                 </Heading>
                 <VotingPhoneNumber>{formattedNumber}</VotingPhoneNumber>
             </InstructionCard>
