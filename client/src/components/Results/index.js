@@ -11,6 +11,9 @@ import Loading from './../Loading';
 import StatsCard from './../Cards/Stats';
 import ItemRow from './ItemRow';
 
+// eslint-disable-next-line no-unused-vars
+const d = require('debug')('suptuc:Results');
+
 const StatsGrid = styled.section`
     display: flex;
     flex-direction: row;
@@ -40,13 +43,28 @@ class Results extends PureComponent {
             // eslint-disable-next-line space-before-function-paren
             .then(async (votingSettings) => {
                 pollConfig = await getPollConfig(votingSettings);
-                results = await getResults(db, pollConfig.options || []);
-                this.setState({
-                    pollConfig,
-                    results
-                });
+                results = await getResults(pollConfig);
+                this.setState(
+                    {
+                        pollConfig,
+                        results
+                    },
+                    () => this.realtimeResults(votingSettings.poll)
+                );
             })
             .catch((err) => this.setState({ error: err }));
+    };
+
+    realtimeResults = (pollRef) => {
+        let results = {};
+        // eslint-disable-next-line space-before-function-paren
+        pollRef.onSnapshot(async (newData) => {
+            d(`New pollData snapshot`);
+            results = await getResults(newData.data());
+            this.setState({
+                results
+            });
+        });
     };
 
     render = () => {
