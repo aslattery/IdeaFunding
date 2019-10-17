@@ -26,7 +26,7 @@ class Results extends PureComponent {
         error: {},
         pollConfig: {},
         results: {
-            items: {},
+            items: [],
             votes: 0,
             voters: 0
         }
@@ -40,10 +40,10 @@ class Results extends PureComponent {
             // eslint-disable-next-line space-before-function-paren
             .then(async (votingSettings) => {
                 pollConfig = await getPollConfig(votingSettings);
-                //results = await getResults(db, pollConfig.options || []);
+                results = await getResults(db, pollConfig.options || []);
                 this.setState({
-                    pollConfig
-                    //results
+                    pollConfig,
+                    results
                 });
             })
             .catch((err) => this.setState({ error: err }));
@@ -52,9 +52,7 @@ class Results extends PureComponent {
     render = () => {
         const { error, pollConfig, results } = this.state;
 
-        if (
-            !Object.keys(pollConfig).length /*|| !Object.keys(results).length*/
-        ) {
+        if (!Object.keys(pollConfig).length || !results?.items.length) {
             return <Loading />;
         }
 
@@ -80,12 +78,12 @@ class Results extends PureComponent {
                             <ItemRow
                                 key={`ir_${item.name}`}
                                 name={item.name}
-                                votes={item.votes}
+                                votes={item?.votes}
                                 ratio={
-                                    !results.votes
+                                    !results?.voters
                                         ? 0
                                         : Math.floor(
-                                              (item.votes / results.votes) *
+                                              (item.votes / results.voters) *
                                                   100,
                                               2
                                           )
