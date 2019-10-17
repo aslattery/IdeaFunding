@@ -9,6 +9,7 @@ const SubHeading = styled.h3`
     margin: 0.66rem 0;
     ${(props) => props.theme.responsive.sff} {
         font-size: 1rem;
+        text-align: center;
     }
     user-select: none;
 `;
@@ -17,6 +18,9 @@ const List = styled.ul`
     list-style: inside circle;
     margin: 0;
     padding: 0;
+    ${(props) => props.theme.responsive.sff} {
+        margin: 0 auto;
+    }
 `;
 
 const ListItem = styled.li`

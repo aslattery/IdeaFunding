@@ -3,12 +3,103 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
+import { withFirebase } from './../../contexts/Firebase';
+import { getVotingSettings } from './../../methods/getVotingSettings';
+import { getPollConfig } from './../../methods/getPollConfig';
+import { getResults } from './../../methods/getResults';
+import Loading from './../Loading';
+import StatsCard from './../Cards/Stats';
+import ItemRow from './ItemRow';
+
+const StatsGrid = styled.section`
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+`;
+
+const ResultsGrid = styled.section``;
+
 class Results extends PureComponent {
-    render = () => null;
+    state = {
+        error: {},
+        pollConfig: {},
+        results: {
+            items: {},
+            votes: 0,
+            voters: 0
+        }
+    };
+
+    componentDidMount = () => {
+        const db = this.props.firebase.firestore();
+        let pollConfig = {};
+        let results = {};
+        getVotingSettings(db)
+            // eslint-disable-next-line space-before-function-paren
+            .then(async (votingSettings) => {
+                pollConfig = await getPollConfig(votingSettings);
+                //results = await getResults(db, pollConfig.options || []);
+                this.setState({
+                    pollConfig
+                    //results
+                });
+            })
+            .catch((err) => this.setState({ error: err }));
+    };
+
+    render = () => {
+        const { error, pollConfig, results } = this.state;
+
+        if (
+            !Object.keys(pollConfig).length /*|| !Object.keys(results).length*/
+        ) {
+            return <Loading />;
+        }
+
+        if (Object.keys(error).length) {
+            return (
+                <pre>
+                    Something went wrong... please try again.
+                    <br />
+                    Error: {JSON.stringify(error, null, 2)}
+                </pre>
+            );
+        }
+
+        return (
+            <React.Fragment>
+                <StatsGrid>
+                    <StatsCard title={`Votes`} value={results.votes} />
+                    <StatsCard title={`Voters`} value={results.voters} />
+                </StatsGrid>
+                <ResultsGrid>
+                    {results.items.length &&
+                        results.items.map((item, i) => (
+                            <ItemRow
+                                key={`ir_${item.name}`}
+                                name={item.name}
+                                votes={item.votes}
+                                ratio={
+                                    !results.votes
+                                        ? 0
+                                        : Math.floor(
+                                              (item.votes / results.votes) *
+                                                  100,
+                                              2
+                                          )
+                                }
+                            />
+                        ))}
+                </ResultsGrid>
+            </React.Fragment>
+        );
+    };
 }
 
 Results.propTypes = {
-    location: PropTypes.object
+    firebase: PropTypes.object
 };
 
-export default Results;
+export default withFirebase(Results);

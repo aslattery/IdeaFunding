@@ -4,18 +4,31 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { darken, lighten } from 'polished';
 
+import AwardIllustration from './../../Illustrations/Award';
+
 const InstructionCard = styled.div`
     background-color: ${(props) =>
-        lighten(0.42, props.theme.colors.brand.primary)};
+        lighten(0.45, props.theme.colors.brand.primary)};
     border: 2px solid
         ${(props) => lighten(0.3667, props.theme.colors.brand.primary)};
-    border-radius: 1rem;
+    border-radius: 0.66rem;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.067);
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 2.33rem 0;
     padding: 1.66rem 0.66rem;
     user-select: none;
+    ${(props) => props.theme.responsive.sff} {
+        margin: 0.66rem 0 1.66rem 0;
+    }
+`;
+
+const Illustration = styled(({ ...rest }) => <AwardIllustration {...rest} />)`
+    margin: 0 0 1.66rem 0;
+    ${(props) => props.theme.responsive.sff} {
+        margin: 0 0 1.66rem 0;
+    }
 `;
 
 const Heading = styled.h1`
@@ -52,10 +65,11 @@ class VotingInstuctions extends PureComponent {
             : formattedNumber
         )
             .replace(/[^\d]/g, '')
-            .replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+            .replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
 
         return (
             <InstructionCard>
+                <Illustration />
                 <Heading>
                     To vote for your favorite pitch,
                     <br />

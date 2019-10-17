@@ -14,13 +14,25 @@ const VotingOptionGrid = styled.section`
 `;
 
 class VotingOptions extends PureComponent {
+    /**
+     * Shuffles array in place. Courtesy of https://stackoverflow.com/a/6274381
+     * @param {Array} a items An array containing the items.
+     */
+    shuffleArray = (a) => {
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    };
+
     render = () => {
         const { number, options } = this.props;
 
         return (
             <VotingOptionGrid>
                 {options.length &&
-                    options.map((option, i) => (
+                    this.shuffleArray(options).map((option, i) => (
                         <Button
                             key={`voteOpt_${option.shortcode}`}
                             option={{ ...option, number }}

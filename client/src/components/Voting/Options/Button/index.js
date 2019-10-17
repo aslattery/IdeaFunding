@@ -8,8 +8,14 @@ const Button = styled(({ ...rest }) => <a {...rest} />)`
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: ${(props) => props.theme.colors.brand.primary};
-    border-radius: 1rem;
+    background: ${(props) => props.theme.colors.brand.primary};
+    background: linear-gradient(
+        337deg,
+        ${(props) => props.theme.colors.brand.primary} 0%,
+        ${(props) => props.theme.colors.brand.secondary} 50%
+    );
+    border-radius: 0.66rem;
+    box-shadow: 0 2px 0 rgba(0, 0, 0, 0.067);
     color: white;
     font-size: 1.1337rem;
     margin: 1.33rem 0;
@@ -19,6 +25,13 @@ const Button = styled(({ ...rest }) => <a {...rest} />)`
         font-family: 'Roboto Mono', monospace;
         font-size: 1.667rem;
         margin: 0 0 0.337rem 0;
+    }
+    ${(props) => props.theme.responsive.sff} {
+        flex-basis: 100%;
+        margin: 0.66rem 0;
+        &:last-child {
+            margin-bottom: 1.66rem;
+        }
     }
 `;
 

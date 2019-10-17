@@ -3,6 +3,9 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
 import { withFirebase } from './../../contexts/Firebase';
+import { getVotingSettings } from './../../methods/getVotingSettings';
+import { getPollConfig } from './../../methods/getPollConfig';
+import Loading from './../Loading';
 import VotingInstructions from './Instructions';
 import VotingOptions from './Options';
 import VotingRules from './Rules';
@@ -12,55 +15,39 @@ const d = require('debug')('suptuc:Voting');
 
 class Voting extends PureComponent {
     state = {
+        error: {},
         pollConfig: {}
     };
-    // eslint-disable-next-line space-before-function-paren
-    componentDidMount = async () => {
+
+    componentDidMount = () => {
         const db = this.props.firebase.firestore();
-        /**
-         * Get the current poll ref from settings
-         */
-        const votingSettingsRef = await db
-            .collection('settings')
-            .doc('production');
-        votingSettingsRef
-            .get()
-            .then((doc) => {
-                if (doc.exists) {
-                    const votingSettings = doc.data();
-                    d('Got votingSettings, %O', votingSettings);
-                    /**
-                     * Get the poll configuration
-                     */
-                    votingSettings.poll
-                        .get()
-                        .then((doc) => {
-                            if (doc.exists) {
-                                const pollConfig = doc.data();
-                                d('Got pollConfig, %O', pollConfig);
-                                this.setState(
-                                    {
-                                        pollConfig
-                                    },
-                                    d('Set pollConfig state')
-                                );
-                                return;
-                            }
-                            d(`pollConfig doesn't exist, or can't be fetched`);
-                        })
-                        .catch((err) => d('Failed to get pollConfig: %O', err));
-                    return;
-                }
-                d(`votingSettings doesn't exist, or can't be fetched`);
+        let pollConfig;
+        getVotingSettings(db)
+            // eslint-disable-next-line space-before-function-paren
+            .then(async (votingSettings) => {
+                pollConfig = await getPollConfig(votingSettings);
+                this.setState({
+                    pollConfig
+                });
             })
-            .catch((err) => d('Failed to get /settings/production: %O', err));
+            .catch((err) => this.setState({ error: err }));
     };
 
     render = () => {
-        const { pollConfig, ...state } = this.state;
+        const { error, pollConfig } = this.state;
 
         if (!Object.keys(pollConfig).length) {
-            return null;
+            return <Loading />;
+        }
+
+        if (Object.keys(error).length) {
+            return (
+                <pre>
+                    Something went wrong... please try again.
+                    <br />
+                    Error: {JSON.stringify(error, null, 2)}
+                </pre>
+            );
         }
 
         return (
