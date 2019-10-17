@@ -16,8 +16,8 @@ const InstructionCard = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin: 2.33rem 0;
-    padding: 1.66rem 0.66rem;
+    margin: 1rem 0 2.33rem 0;
+    padding: 0.66rem 0.66rem 1.66rem 0.66rem;
     user-select: none;
     ${(props) => props.theme.responsive.sff} {
         margin: 0.66rem 0 1.66rem 0;
@@ -33,21 +33,48 @@ const Illustration = styled(({ ...rest }) => <AwardIllustration {...rest} />)`
     }
 `;
 
-const Heading = styled.h1`
+const FlexRow = styled.div`
+    ${(props) => props.theme.responsive.desktop} {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        width: 100%;
+    }
+`;
+
+const FlexBlock = styled(({ ...rest }) => <div {...rest} />)`
+    ${(props) => props.theme.responsive.desktop} {
+        display: flex;
+        flex-basis: 50%;
+        flex-direction: column;
+    }
+`;
+
+const Heading = styled(({ desktopOnly, ...rest }) => <h1 {...rest} />)`
     color: ${(props) => darken(0.3, props.theme.colors.brand.primary)};
     font-size: 1.2rem;
     font-weight: 400;
-    margin: 0;
+    margin: ${(props) => (props.desktopOnly ? `0.667rem 0 0 0` : `0`)};
     text-align: center;
     ${(props) => props.theme.responsive.sff} {
         font-size: 1rem;
+    }
+    span {
+        ${(props) => props.theme.responsive.device} {
+            display: ${(props) => (!props.desktopOnly ? `block` : `none`)};
+            visibility: ${(props) =>
+                !props.desktopOnly ? `visible` : `hidden`};
+        }
+        font-size: 1.867rem;
+        margin: 0.667rem 0 0 0;
     }
 `;
 
 const VotingPhoneNumber = styled.h2`
     color: ${(props) => props.theme.colors.brand.primary};
     font-family: 'Roboto Mono', monospace;
-    font-size: 2.5rem;
+    font-size: 1.867rem;
     font-weight: 400;
     margin: 0.66rem 0 0 0;
     text-align: center;
@@ -58,7 +85,7 @@ const VotingPhoneNumber = styled.h2`
 
 class VotingInstuctions extends PureComponent {
     render = () => {
-        const { number } = this.props;
+        const { number, votingEnabled } = this.props;
 
         // Format the number for display
         let formattedNumber = String(number);
@@ -69,22 +96,45 @@ class VotingInstuctions extends PureComponent {
             .replace(/[^\d]/g, '')
             .replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
 
-        return (
+        return votingEnabled ? (
+            <InstructionCard>
+                <Illustration />
+                <FlexRow>
+                    <FlexBlock>
+                        <Heading>
+                            To vote for your favorite pitch,
+                            <br />
+                            text their code to:
+                        </Heading>
+                        <VotingPhoneNumber>{formattedNumber}</VotingPhoneNumber>
+                    </FlexBlock>
+                    <FlexBlock>
+                        <Heading desktopOnly>
+                            Or tap to vote from
+                            <br />
+                            your mobile device:
+                            <br />
+                            <span>vote.ideafunding.org</span>
+                        </Heading>
+                    </FlexBlock>
+                </FlexRow>
+            </InstructionCard>
+        ) : (
             <InstructionCard>
                 <Illustration />
                 <Heading>
-                    To vote for your favorite pitch,
+                    Voting isn&apos;t available right now,
                     <br />
-                    text their code to:
+                    please check back shortly!
                 </Heading>
-                <VotingPhoneNumber>{formattedNumber}</VotingPhoneNumber>
             </InstructionCard>
         );
     };
 }
 
 VotingInstuctions.propTypes = {
-    number: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    number: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    votingEnabled: PropTypes.bool
 };
 
 export default VotingInstuctions;

@@ -52,11 +52,16 @@ class Voting extends PureComponent {
 
         return (
             <React.Fragment>
-                <VotingInstructions number={pollConfig.phoneNumber} />
-                <VotingOptions
+                <VotingInstructions
+                    votingEnabled={pollConfig?.votingEnabled || false}
                     number={pollConfig.phoneNumber}
-                    options={pollConfig.options}
                 />
+                {pollConfig?.votingEnabled && (
+                    <VotingOptions
+                        number={pollConfig.phoneNumber}
+                        options={pollConfig.options}
+                    />
+                )}
                 <VotingRules />
             </React.Fragment>
         );

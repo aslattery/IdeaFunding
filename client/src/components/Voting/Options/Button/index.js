@@ -17,10 +17,12 @@ const Button = styled(({ ...rest }) => <a {...rest} />)`
     border-radius: 0.66rem;
     box-shadow: 0 2px 0 rgba(0, 0, 0, 0.067);
     color: white;
-    font-size: 1.1337rem;
+    font-size: 1rem;
     margin: 1.33rem 0;
     padding: 1.66rem;
+    text-align: center;
     text-decoration: none;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.117);
     span {
         font-family: 'Roboto Mono', monospace;
         font-size: 1.667rem;
@@ -32,6 +34,10 @@ const Button = styled(({ ...rest }) => <a {...rest} />)`
         &:last-child {
             margin-bottom: 1.66rem;
         }
+    }
+    ${(props) => props.theme.responsive.desktop} {
+        flex-basis: 30%;
+        margin: 0.667rem;
     }
 `;
 

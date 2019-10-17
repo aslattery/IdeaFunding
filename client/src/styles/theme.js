@@ -14,6 +14,7 @@ export default {
         }
     },
     responsive: {
+        desktop: `@media (min-width: 770px)`,
         device: `@media (min-width: 320px) and (max-width: 769px)`,
         sff: `@media (max-width: 479px)`
     }

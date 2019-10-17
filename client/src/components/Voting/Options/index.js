@@ -11,6 +11,9 @@ const VotingOptionGrid = styled.section`
     flex-wrap: wrap;
     align-items: space-between;
     justify-content: space-between;
+    ${(props) => props.theme.responsive.desktop} {
+        justify-content: center;
+    }
 `;
 
 class VotingOptions extends PureComponent {
