@@ -1,10 +1,13 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+
+
 try {
     admin.initializeApp();
 } catch (e) {
     // This is just in case it has been initialized by another function first
 }
+
 exports = module.exports = functions.https.onRequest((request, response) => {
     /*
      {
@@ -44,6 +47,7 @@ exports = module.exports = functions.https.onRequest((request, response) => {
     }
 
     const db = admin.firestore();
+    const increment = admin.firestore.FieldValue.increment(1);
     let pollsRef = db.collection('polls');
     let pollQuery = pollsRef.where('phoneNumber', '==', toPhone).where('votingEnabled', '==', true);
     pollQuery.get().then(snapshot => {
@@ -54,7 +58,6 @@ exports = module.exports = functions.https.onRequest((request, response) => {
             return;
         } else {
             let data = snapshot.docs;
-            console.log(data);
             if (data.length == 1) {
                 const poll = data[0];
                 console.log('poll found');
@@ -72,50 +75,10 @@ exports = module.exports = functions.https.onRequest((request, response) => {
                     return shortMatch != null || nameMatch != null
                 });
                 if (votedFor != null) {
-                    console.log('voted for match');
-                    console.log(votedFor);
-                    votedFor = votedFor.shortcode;
-                    let newVote = {
-                        poll: poll.ref,
-                        voter: fromPhone,
-                        recorded: Date.now(),
-                        votedFor
-                    };
-                    console.log(newVote);
-                    let VotesRef = db.collection('votes');
-                    // let VoterQuery = VotesRef.where('voter', '==', fromPhone).where('poll', '==', poll.ref));
-                    let VoterQuery = VotesRef.where('voter', '==', fromPhone);
-                    VoterQuery.get().then(votesSnapshot => {
-                        if (votesSnapshot.empty) {
-                            console.log("first time voter");
-                            VotesRef.add(newVote);
-                            response.status(200);
-                            response.send("success");
-                            return;
-                        } else {
-                            let votes = votesSnapshot.docs;
-                            if (votes.length > 1) {
-                                console.log('we have problems');
-                                // TODO: maybe pop one for updating and delete the rest
-                                response.status(500);
-                                response.send("error");
-                                return;
-                            } else {
-                                if (votes.length == 1) {
-                                    console.log("We have a prior vote");
-                                    vote = votes[0];
-                                    vote.ref.update(newVote);
-                                    response.status(200);
-                                    response.send("success");
-                                    return;
-                                } else {
-                                    console.log('shouldn\'t happen');
-                                    response.status(500);
-                                    response.send("error");
-                                }
-                            }
-                        }
-                    });
+                    poll.ref.update({[`votes.${fromPhone}`] : votedFor.shortcode});
+                    poll.ref.update({ totalVotes: increment });
+                    response.status(200);
+                    response.send("success");
                 } else {
                     console.log('votedFor not matched');
                     response.status(500);
