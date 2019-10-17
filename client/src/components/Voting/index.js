@@ -16,7 +16,8 @@ const d = require('debug')('suptuc:Voting');
 class Voting extends PureComponent {
     state = {
         error: {},
-        pollConfig: {}
+        pollConfig: {},
+        votingEnabled: false
     };
 
     componentDidMount = () => {
@@ -26,11 +27,29 @@ class Voting extends PureComponent {
             // eslint-disable-next-line space-before-function-paren
             .then(async (votingSettings) => {
                 pollConfig = await getPollConfig(votingSettings);
-                this.setState({
-                    pollConfig
-                });
+                this.setState(
+                    {
+                        pollConfig,
+                        votingEnabled: pollConfig.votingEnabled
+                    },
+                    () => this.listenForPollStatus(votingSettings.poll)
+                );
             })
             .catch((err) => this.setState({ error: err }));
+    };
+
+    listenForPollStatus = (pollRef) => {
+        let pollSnapshot = false;
+        // eslint-disable-next-line space-before-function-paren
+        pollRef.onSnapshot(async (newData) => {
+            d(`New pollData snapshot`);
+            pollSnapshot = newData.data();
+            if (pollSnapshot.votingEnabled !== this.state.votingEnabled) {
+                this.setState({
+                    votingEnabled: pollSnapshot.votingEnabled
+                });
+            }
+        });
     };
 
     render = () => {
@@ -53,10 +72,10 @@ class Voting extends PureComponent {
         return (
             <React.Fragment>
                 <VotingInstructions
-                    votingEnabled={pollConfig?.votingEnabled || false}
+                    votingEnabled={this.state.votingEnabled || false}
                     number={pollConfig.phoneNumber}
                 />
-                {pollConfig?.votingEnabled && (
+                {this.state.votingEnabled && (
                     <VotingOptions
                         number={pollConfig.phoneNumber}
                         options={pollConfig.options}
