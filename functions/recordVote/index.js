@@ -22,15 +22,15 @@ exports = module.exports = functions.https.onRequest((request, response) => {
         FromState: ‘AZ’,
         SmsStatus: ‘received’,
         FromCity: ‘PHOENIX’,
-        Body: ‘Test two’,
+        Body: ‘Test Two’,
         FromCountry: ‘US’,
-        To: ‘+12172884421’,
+        To: ‘+##########’,
         MessagingServiceSid: ‘MG2ca64febf3dc8f8eb0fd10d7aa45663b’,
         ToZip: ‘61810’,
         NumSegments: ‘1’,
         MessageSid: ‘SM0502c78af796157271062c0155e5f5ec’,
-        AccountSid: ‘AC0e0f269bf9ec4a806d4dbe5a1c616023’,
-        From: ‘+15203707474’,
+        AccountSid: ‘*******************************’,
+        From: ‘+##########’,
         ApiVersion: ‘2010-04-01’
     }
      */
