@@ -10,7 +10,8 @@
         "clean": "rimraf .cache public",
         "develop": "gatsby develop --port 8683",
         "build": "gatsby build",
-        "serve": "gatsby serve"
+        "serve": "gatsby serve",
+        "test": "jest --config jest/jest.config.js"
     },
     "browserslist": [
         ">0.5%",
@@ -29,7 +30,8 @@
         "@babel/preset-env": "^7.5.5",
         "@hot-loader/react-dom": "^16.9",
         "babel-eslint": "^10.0.3",
-        "babel-preset-gatsby": "^0.2.8",
+        "babel-jest": "^24.9.0",
+        "babel-preset-gatsby": "^0.2.20",
         "eslint": "^6.1.0",
         "eslint-import-resolver-webpack": "^0.11.1",
         "eslint-plugin-import": "^2.18.2",
@@ -38,7 +40,12 @@
         "eslint-plugin-react-hooks": "^1.7.0",
         "eslint-plugin-standard": "^4.0.0",
         "git-rev-sync": "^1.12.0",
+        "identity-obj-proxy": "^3.0.0",
+        "jest": "^24.9.0",
+        "jest-chain": "^1.1.2",
+        "jest-extended": "^0.11.2",
         "prettier": "^1.18.2",
+        "react-test-renderer": "^16.10.2",
         "rimraf": "^2.6.3"
     },
     "dependencies": {
@@ -56,11 +63,11 @@
         "gatsby-plugin-sitemap": "^2.2.0",
         "gatsby-plugin-styled-components": "^3.1.2",
         "gatsby-source-filesystem": "^2.1.4",
+        "polished": "^3.4.1",
         "prop-types": "^15.7.2",
         "react": "^16.9",
         "react-dom": "^16.9",
         "react-helmet": "^5.2.1",
-        "polished": "^3.4.1",
         "styled-components": "5.0.0-beta.9"
     }
 }

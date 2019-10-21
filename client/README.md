@@ -36,6 +36,15 @@ You can also test the production build of your site by using the built in develo
 yarn serve
 ```
 
+### Unit testing
+
+Unit testing is handled by the [Jest](https://jestjs.io/) unit testing framework. To run all existing unit tests simply run:
+
+```bash
+yarn test
+```
+
+
 ## Deploying to Firebase Hosting
 
 For the purposes of IdeaFunding 2019, we setup `vote.ideafunding.org` to be a Firebase Hosting site. Please refer to the [Firebase Hosting documentation](https://firebase.google.com/docs/hosting/) for specific information, such as how to setup a [custom domain](https://firebase.google.com/docs/hosting/custom-domain).
