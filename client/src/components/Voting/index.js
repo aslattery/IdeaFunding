@@ -9,7 +9,6 @@ import Loading from './../Loading';
 import VotingInstructions from './Instructions';
 import VotingOptions from './Options';
 import VotingRules from './Rules';
-import VotingEnabled from './Enabled';
 
 // eslint-disable-next-line no-unused-vars
 const d = require('debug')('suptuc:Voting');
