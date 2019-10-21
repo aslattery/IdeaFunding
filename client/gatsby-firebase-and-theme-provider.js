@@ -4,6 +4,7 @@ import { ThemeProvider } from 'styled-components';
 
 import FirebaseContextContainer from './src/contexts/Firebase';
 import { GlobalStyleOverrides } from './src/styles/globalStyleOverrides';
+import DefaultTheme from './src/styles/theme';
 
 // eslint-disable-next-line react/display-name,react/prop-types
 export default ({ element, props }) => {
@@ -14,7 +15,7 @@ export default ({ element, props }) => {
                 titleTemplate="%s | Powered by Hivemetric"
                 defer={false}
             />
-            <ThemeProvider theme={{}}>
+            <ThemeProvider theme={DefaultTheme}>
                 <GlobalStyleOverrides />
                 {element}
             </ThemeProvider>

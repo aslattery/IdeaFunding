@@ -1,3 +1,8 @@
+## 1.2.0 (2019-10-21)
+
+-   Remove all legacy code
+-   Functional client interface, with real-time subscriptions and such
+
 ## 1.1.0 (2019-10-15)
 
 -   Continue to remove legacy code

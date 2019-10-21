@@ -8,6 +8,7 @@ class HivemetricLogo extends PureComponent {
             xmlns="http://www.w3.org/2000/svg"
             id="Layer_1"
             viewBox="0 0 844 163.3"
+            {...this.props}
         >
             <style>{`.st0{opacity:.85}.st1,.st2{fill:#fff}.st2{opacity:.85}.st3{fill:#00b6fa}.st4{opacity:.85;fill:#fa8200}`}</style>
             <g className="st0">
@@ -78,6 +79,9 @@ class HivemetricLogo extends PureComponent {
     );
 }
 
-HivemetricLogo.propTypes = {};
+HivemetricLogo.propTypes = {
+    height: PropTypes.string,
+    width: PropTypes.string
+};
 
 export default HivemetricLogo;
