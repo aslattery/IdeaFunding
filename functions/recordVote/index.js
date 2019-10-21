@@ -103,6 +103,5 @@ exports = module.exports = functions.https.onRequest((request, response) => {
 const transformFlexReg = (str) => {
     str = str.toLowerCase();
     str = str.replace(' ', '\s?');
-    str = str.replace('k', '[c,k]');
     return new RegExp(str, 'i');
 };
