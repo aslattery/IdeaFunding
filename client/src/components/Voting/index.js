@@ -38,20 +38,6 @@ class Voting extends PureComponent {
             .catch((err) => this.setState({ error: err }));
     };
 
-    listenForPollStatus = (pollRef) => {
-        let pollSnapshot = false;
-        // eslint-disable-next-line space-before-function-paren
-        pollRef.onSnapshot(async (newData) => {
-            d(`New pollData snapshot`);
-            pollSnapshot = newData.data();
-            if (pollSnapshot.votingEnabled !== this.state.votingEnabled) {
-                this.setState({
-                    votingEnabled: pollSnapshot.votingEnabled
-                });
-            }
-        });
-    };
-
     render = () => {
         const { error, pollConfig } = this.state;
 
