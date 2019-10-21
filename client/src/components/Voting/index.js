@@ -16,7 +16,8 @@ const d = require('debug')('suptuc:Voting');
 class Voting extends PureComponent {
     state = {
         error: {},
-        pollConfig: {}
+        pollConfig: {},
+        votingEnabled: false
     };
 
     componentDidMount = () => {
@@ -26,9 +27,13 @@ class Voting extends PureComponent {
             // eslint-disable-next-line space-before-function-paren
             .then(async (votingSettings) => {
                 pollConfig = await getPollConfig(votingSettings);
-                this.setState({
-                    pollConfig
-                });
+                this.setState(
+                    {
+                        pollConfig,
+                        votingEnabled: pollConfig.votingEnabled
+                    },
+                    () => this.listenForPollStatus(votingSettings.poll)
+                );
             })
             .catch((err) => this.setState({ error: err }));
     };
@@ -52,11 +57,16 @@ class Voting extends PureComponent {
 
         return (
             <React.Fragment>
-                <VotingInstructions number={pollConfig.phoneNumber} />
-                <VotingOptions
+                <VotingInstructions
+                    votingEnabled={this.state.votingEnabled || false}
                     number={pollConfig.phoneNumber}
-                    options={pollConfig.options}
                 />
+                {this.state.votingEnabled && (
+                    <VotingOptions
+                        number={pollConfig.phoneNumber}
+                        options={pollConfig.options}
+                    />
+                )}
                 <VotingRules />
             </React.Fragment>
         );
