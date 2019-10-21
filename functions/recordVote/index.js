@@ -10,6 +10,7 @@ try {
 
 exports = module.exports = functions.https.onRequest((request, response) => {
     /*
+        TWILIO POST Request (request.body.Body)
      {
         ToCountry: ‘US’,
         ToState: ‘IL’,
@@ -39,7 +40,7 @@ exports = module.exports = functions.https.onRequest((request, response) => {
 
     if (toPhone == null || fromPhone == null) {
         response.status(500);
-        response.send("Invalid TO of FROM phone");
+        response.send("Invalid TO or FROM phone");
         return;
     } else {
         toPhone = parseInt(toPhone[0]);
@@ -60,9 +61,8 @@ exports = module.exports = functions.https.onRequest((request, response) => {
             let data = snapshot.docs;
             if (data.length == 1) {
                 const poll = data[0];
-                console.log('poll found');
                 let pollId = poll.id;
-                console.log(pollId);
+                console.log('Poll found with id: ', pollId);
                 data = poll.data();
                 let options = data.options;
 
