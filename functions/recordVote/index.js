@@ -1,6 +1,8 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
 
+const fs = require('fs');
+
 
 try {
     admin.initializeApp();
@@ -8,44 +10,30 @@ try {
     // This is just in case it has been initialized by another function first
 }
 
-exports = module.exports = functions.https.onRequest((request, response) => {
-    /*
-        TWILIO POST Request (request.body.Body)
-     {
-        ToCountry: ‘US’,
-        ToState: ‘IL’,
-        SmsMessageSid: ‘SM0502c78af796157271062c0155e5f5ec’,
-        NumMedia: ‘0’,
-        ToCity: ‘SIDELL’,
-        FromZip: ‘85004’,
-        SmsSid: ‘SM0502c78af796157271062c0155e5f5ec’,
-        FromState: ‘AZ’,
-        SmsStatus: ‘received’,
-        FromCity: ‘PHOENIX’,
-        Body: ‘Test Two’,
-        FromCountry: ‘US’,
-        To: ‘+##########’,
-        MessagingServiceSid: ‘MG2ca64febf3dc8f8eb0fd10d7aa45663b’,
-        ToZip: ‘61810’,
-        NumSegments: ‘1’,
-        MessageSid: ‘SM0502c78af796157271062c0155e5f5ec’,
-        AccountSid: ‘*******************************’,
-        From: ‘+##########’,
-        ApiVersion: ‘2010-04-01’
+let supportedProviders = {};
+fs.readdir(`${__dirname}/supportedProviders`, (err, providers) => {
+    if (err != null) {
+        throw new Error(err);
     }
-     */
-    const messageBody = request.body.Body;
-    let toPhone = request.body.To.match(/[0-9]+/);
-    let fromPhone = request.body.From.match(/[0-9]+/);
+    for (let provider of providers) {
+        supportedProviders[provider.split('.')[0]] = require(`./supportedProviders/${provider}`);
+    }
+});
 
-    if (toPhone == null || fromPhone == null) {
-        response.status(500);
-        response.send("Invalid TO or FROM phone");
-        return;
-    } else {
-        toPhone = parseInt(toPhone[0]);
-        fromPhone = parseInt(fromPhone[0]);
+exports = module.exports = functions.https.onRequest((request, response) => {
+
+    let provider = 'twilio';
+    const providerParam = request.params[0].split('/')[1];
+    if (Object.keys(supportedProviders).includes(providerParam)) {
+        provider = providerParam;
     }
+
+    const parsedPayload = supportedProviders[provider](request);
+    if (parsedPayload === null) {
+        response.status(200);
+        response.send("Malformed SMS payload recieved");
+    }
+    let {toPhone, fromPhone, messageBody} = parsedPayload;
 
     const db = admin.firestore();
     const increment = admin.firestore.FieldValue.increment(1);
@@ -54,8 +42,8 @@ exports = module.exports = functions.https.onRequest((request, response) => {
     pollQuery.get().then(snapshot => {
         if (snapshot.empty) {
             console.log('No active poll found for phone number', toPhone);
-            response.status(500);
-            response.send("error");
+            response.status(200); // No more 500s, this triggers retry for "nexmo"
+            response.send(`No active poll found for phone number ${toPhone}`);
             return;
         } else {
             let data = snapshot.docs;
@@ -78,24 +66,24 @@ exports = module.exports = functions.https.onRequest((request, response) => {
                     poll.ref.update({[`votes.${fromPhone}`] : votedFor.shortcode});
                     poll.ref.update({ totalVotes: increment });
                     response.status(200);
-                    response.send("success");
+                    response.send("Vote recorded");
                 } else {
                     console.log('votedFor not matched');
-                    response.status(500);
-                    response.send("no matched vote");
+                    response.status(200); // No more 500s, this triggers retry for "nexmo"
+                    response.send("No matched voting option");
                     return;
                 }
             } else {
                 console.log('More than one poll found....');
-                response.status(500);
-                response.send("error");
+                response.status(200); // No more 500s, this triggers retry for "nexmo"
+                response.send(`More than one poll found for number ${toPhone}`);
                 return;
             }
         }
     }).catch(err => {
         console.log(err);
-        response.status(500);
-        response.send("error");
+        response.status(200); // No more 500s, this triggers retry for "nexmo"
+        response.send("Database Error");
         return;
     })
 });
