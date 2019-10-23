@@ -54,8 +54,8 @@ exports = module.exports = functions.https.onRequest((request, response) => {
     pollQuery.get().then(snapshot => {
         if (snapshot.empty) {
             console.log('No active poll found for phone number', toPhone);
-            response.status(500);
-            response.send("error");
+            response.status(200); // No more 500s, this triggers retry for "nexmo"
+            response.send(`No active poll found for phone number ${toPhone}`);
             return;
         } else {
             let data = snapshot.docs;
@@ -78,24 +78,24 @@ exports = module.exports = functions.https.onRequest((request, response) => {
                     poll.ref.update({[`votes.${fromPhone}`] : votedFor.shortcode});
                     poll.ref.update({ totalVotes: increment });
                     response.status(200);
-                    response.send("success");
+                    response.send("Vote recorded");
                 } else {
                     console.log('votedFor not matched');
-                    response.status(500);
-                    response.send("no matched vote");
+                    response.status(200); // No more 500s, this triggers retry for "nexmo"
+                    response.send("No matched voting option");
                     return;
                 }
             } else {
                 console.log('More than one poll found....');
-                response.status(500);
-                response.send("error");
+                response.status(200); // No more 500s, this triggers retry for "nexmo"
+                response.send(`More than one poll found for number ${toPhone}`);
                 return;
             }
         }
     }).catch(err => {
         console.log(err);
-        response.status(500);
-        response.send("error");
+        response.status(200); // No more 500s, this triggers retry for "nexmo"
+        response.send("Database Error");
         return;
     })
 });
