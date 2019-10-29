@@ -1,11 +1,5 @@
-const functions = require('firebase-functions');
-
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
-
-
+/*
+    This file servers as deployment point for all functions.
+        - Functions are isolated in subdirectories and exposed for deployment here as module exports
+ */
 exports.recordVote = require('./recordVote');
