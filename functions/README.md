@@ -13,22 +13,6 @@ Prior to cloning this repository, we recommend having Node v10+ installed, and a
 yarn install
 ```
 
-### If desired, install Firebase Emulators
-```bash
-firebase emulators:start
-```
-This will install and start local development emulators for each of the firebbase services used in this project (functions and firestore)
-
-If you wish to only start one service run the command with the `--only` flag. 
-
-Ex.
-```bash
-firestore emulators:start ---only functions
-```
-
-Note: Any firebase service not being run in a local emulator will default to attempt accessing a production version of the service and may therefor render associated resource expenses.
-
-
 ## Deploying to Firebase Functions
 
 This project includes an example `firebase.json` and `.firebaserc` in the repository root. By using the Firebase CLI (`firebase-tools` on NPM), once you have authenticated and setup your Firebase project information, deploying you functions becomes a simple process.
@@ -38,6 +22,23 @@ firebase deploy --only functions
 ```
 
 This will deploy only your functions to you Firebase production project. (Note: only functions exposed as module exports in `/functions/index.js` will be deployed)
+
+
+### If desired, install Firebase Emulators
+```bash
+firebase emulators:start
+```
+This will install and start local development emulators for each of the firebase services used in this project (functions and firestore)
+
+If you wish to only start one service run the command with the `--only` flag. 
+
+Ex.
+```bash
+firebase emulators:start ---only functions
+```
+
+Note: Any firebase service not being run in a local emulator will default to attempt accessing a production version of the service and may therefor render associated resource expenses.
+
 
 ## Config for Use with SMS Webhooks
 
